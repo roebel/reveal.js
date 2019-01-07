@@ -3233,7 +3233,7 @@
 
 		if( config.slideHeadStr != null && dom.slideHeadTxt) {
                     if (config.slideHeadStr != '') {
-		        dom.slideHeadTxt.innerHTML = indexh+' - '+config.slideHeadStr;
+		        dom.slideHeadTxt.innerHTML = (indexh+1) + ' - '+config.slideHeadStr;
                     }
                     else {
 		        dom.slideHeadTxt.innerHTML = config.slideHeadStr;
