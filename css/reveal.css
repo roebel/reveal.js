@@ -478,6 +478,63 @@ body {
 .reveal .slide-number-delimiter {
   margin: 0 3px; }
 
+/*  slide foot positions the footer
+*/
+.reveal .slide-foot-container {
+	position: fixed;
+	display: block;
+        width:100%;
+	bottom: 0em;
+}
+.reveal .slide-foot {
+	position: absolute;
+	display: block;
+        width:100%;
+        text-align : center;
+	bottom: 1em;
+	opacity: 0.6;
+	z-index: 31;
+        font-size: 70%; 
+        color: #706020; 
+/*        background-color:  #aaaaaa; */
+}
+
+
+/*  slide head positions the slides header
+*/
+.reveal .slide-head-container {
+	position: absolute;
+	display: block;
+        padding: 0px;
+        width:100%;
+	top: 50%;
+	left: 50%;
+/*        background-color:  #aaaaaa; */
+}
+.reveal .slide-head {
+	position: absolute;
+	display: block;
+        width:100%;
+        left: -50%;
+        top: -40%;
+	z-index: 31;
+        color: #706020; 
+/*        background-color: #aaaaaa; */
+}
+.reveal .slide-head-text {
+	position: absolute;
+	display: block;
+        width:100%;
+        text-align : right;
+        left: 0;
+        top: 0.1;
+        margin-bottom: 0px;
+	opacity: 0.6;
+	z-index: 31;
+        font-size: 70%; 
+        color: #706020; 
+}
+
 /*********************************************
  * SLIDES
  *********************************************/

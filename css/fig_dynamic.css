@@ -1,0 +1,6 @@
+.fig_dynamic {
+    display: inline-block !important;
+    box-shadow: none !important; 
+    border:0 !important;
+    margin-bottom: -0.125em !important;
+}

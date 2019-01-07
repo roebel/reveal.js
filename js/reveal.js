@@ -175,6 +175,12 @@
 			// Focuses body when page changes visibility to ensure keyboard shortcuts work
 			focusBodyOnPageVisibilityChange: true,
 
+                        // foot string
+                        slideFootStr: null,  
+
+                        // head string
+                        slideHeadStr: null,  
+                    
 			// Transition style
 			transition: 'slide', // none/fade/slide/convex/concave/zoom
 
@@ -241,7 +247,11 @@
 		// The horizontal and vertical index of the currently active slide
 		indexh,
 		indexv,
+                num_slides = 0,
 
+                // holds slide foot string
+                foot_string,
+            
 		// The previous and current slide HTML elements
 		previousSlide,
 		currentSlide,
@@ -555,6 +565,7 @@
 
 		// Prevent transitions while we're loading
 		dom.slides.classList.add( 'no-transition' );
+                num_slides = dom.slides.length; 
 
 		if( isMobileDevice ) {
 			dom.wrapper.classList.add( 'no-hover' );
@@ -587,6 +598,15 @@
 		// Slide number
 		dom.slideNumber = createSingletonNode( dom.wrapper, 'div', 'slide-number', '' );
 
+		// allow presentations to have a foot
+                // containers are used to provide a full width encloser
+                // that simplifies scaling
+		dom.slideFootContainer  = createSingletonNode( dom.wrapper, 'div', 'slide-foot-container', '' );
+		dom.slideFoot  = createSingletonNode(dom.slideFootContainer , 'div', 'slide-foot', '' );
+		dom.slideHeadContainer  = createSingletonNode( dom.wrapper, 'div', 'slide-head-container', '' );
+		dom.slideHead  = createSingletonNode( dom.slideHeadContainer, 'div', 'slide-head', '' );
+		dom.slideHeadTxt  = createSingletonNode( dom.slideHead, 'div', 'slide-head-text', '' );
+            
 		// Element containing notes that are visible to the audience
 		dom.speakerNotes = createSingletonNode( dom.wrapper, 'div', 'speaker-notes', null );
 		dom.speakerNotes.setAttribute( 'data-prevent-swipe', '' );
@@ -1966,9 +1986,12 @@
 
 				// Layout the contents of the slides
 				layoutSlideContents( config.width, config.height );
-
+                                var slidePadding =  config.height * config.margin 
 				dom.slides.style.width = size.width + 'px';
 				dom.slides.style.height = size.height + 'px';
+                                dom.slideHeadContainer.style.width = size.width + 'px';
+                                dom.slideHeadTxt.setAttribute('style', 
+                                                      'top:'+ (-size.height/2-slidePadding/3)+'px');
 
 				// Determine scale of content to fit within available space
 				scale = Math.min( size.presentationWidth / size.width, size.presentationHeight / size.height );
@@ -1991,7 +2014,9 @@
 					// Don't use zoom to scale down since that can lead to shifts
 					// in text layout/line breaks.
 					if( scale > 1 && features.zoom ) {
-						dom.slides.style.zoom = scale;
+					        dom.slides.style.zoom = scale;
+                                                dom.slideFootContainer.style.zoom = scale;
+                                                dom.slideHeadContainer.style.zoom = scale;
 						dom.slides.style.left = '';
 						dom.slides.style.top = '';
 						dom.slides.style.bottom = '';
@@ -2006,6 +2031,8 @@
 						dom.slides.style.bottom = 'auto';
 						dom.slides.style.right = 'auto';
 						transformSlides( { layout: 'translate(-50%, -50%) scale('+ scale +')' } );
+				                transformElement( dom.slideFootContainer, 'scale('+ scale +')' );
+				                transformElement( dom.slideHeadContainer, 'translate(-50%, -50%) scale('+ scale +') translate(50%, 50%)' );
 					}
 				}
 
@@ -2670,6 +2697,7 @@
 		updateBackground();
 		updateParallax();
 		updateSlideNumber();
+		updateFootandHead();
 		updateNotes();
 
 		// Update the URL hash
@@ -2709,7 +2737,8 @@
 
 		updateControls();
 		updateProgress();
-		updateSlideNumber();
+	        updateSlideNumber();
+                updateFootandHead();
 		updateSlidesVisibility();
 		updateBackground( true );
 		updateNotesVisibility();
@@ -2926,6 +2955,19 @@
 			slides[index].classList.add( 'present' );
 			slides[index].removeAttribute( 'hidden' );
 			slides[index].removeAttribute( 'aria-hidden' );
+
+                        var head_elements = slides[index].getElementsByClassName('slide-segment-title');
+                        if (head_elements.length == 0 
+                            && slides[index].parentNode.className == 'stack present') {
+                            //console.log('parent:'+slides[index].parentNode.className)
+                            head_elements = slides[index].parentNode.getElementsByClassName('slide-segment-title');
+                        }
+                        if (head_elements.length) {
+                            config.slideHeadStr = head_elements[0].innerHTML
+                        }
+                        else {
+                            config.slideHeadStr = ''
+                        }
 
 			// If this slide has a state associated with it, add it
 			// onto the current state of the deck
@@ -3171,6 +3213,58 @@
 
 	}
 
+
+	/**
+	 * Updates the foot and head strings
+	 */
+	function updateFootandHead() {
+
+	    if( !isPrintingPDF() ) {
+            
+		// Set slide foot str if set
+		if( config.slideFootStr && dom.slideFoot) {
+                    if (indexh > 0 || indexv > 0) {
+	                dom.slideFoot.innerHTML = config.slideFootStr;
+                    }
+                    else {
+	                dom.slideFoot.innerHTML = '';
+                    }
+		}
+
+		if( config.slideHeadStr != null && dom.slideHeadTxt) {
+                    if (config.slideHeadStr != '') {
+		        dom.slideHeadTxt.innerHTML = indexh+' - '+config.slideHeadStr;
+                    }
+                    else {
+		        dom.slideHeadTxt.innerHTML = config.slideHeadStr;
+                    }
+                    // update header position
+                    if ( 0) {
+                        // solution does not work reliably, has been replaced by a fixed right position
+                    var ccs = document.querySelectorAll("section.present");
+                    if (ccs.length) {
+                        var off = $(ccs[0]).offset()
+                        var pos = $(ccs[0]).position()
+                        var posp =  $(ccs[0].parentNode).position()
+                        var pospp =  $(ccs[0].parentNode.parentNode).offset()
+                        var offp =  $(ccs[0].parentNode).position()
+                        var offpp =  $(ccs[0].parentNode.parentNode).offset()
+                        console.log("=============\noff present:"+off.left)
+                        console.log("pos present:"+pos.left)
+                        console.log("ppos "+ ccs[0].parentNode.className+":"+posp.left+" offset:"+offp.left)
+                        console.log("pppos "+ ccs[0].parentNode.parentNode.className+":"+pospp.left+" offset:"+offpp.left)
+                        dom.slideHead.style.left = pos.left+'px';
+                        
+                    }
+                    else {
+                        console.log('could not determine head position')
+                    }
+                    }
+		}
+            }
+	}
+
+    
 	/**
 	 * Updates the state of all control/navigation arrows.
 	 */
