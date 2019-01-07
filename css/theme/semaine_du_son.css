@@ -512,7 +512,11 @@ column-count:2;
  *********************************************/
 .reveal .slide-number {
   color: #706020; 
-  font-size: 50%; }
+  font-size: 40%;
+  padding: 2px;
+  background-color: #ffffff; 
+  border: 3px inset #706020;
+}
 
 /*  slide-segment-title element is used to communicate the current header title
     to the display engine 
