@@ -88,7 +88,14 @@
 			// - "speaker":  Only in the speaker view
 			showSlideNumber: 'all',
 
-			// Use 1 based indexing for # links to match slide number (default is zero
+                        // foot string
+                        slideFootStr: null,  
+
+                        // head string
+                        slideHeadStr: null,  
+
+
+                        // Use 1 based indexing for # links to match slide number (default is zero
 			// based)
 			hashOneBasedIndex: false,
 
@@ -744,6 +751,10 @@
 			'<button class="navigate-right" aria-label="next slide"><div class="controls-arrow"></div></button>' +
 			'<button class="navigate-up" aria-label="above slide"><div class="controls-arrow"></div></button>' +
 			'<button class="navigate-down" aria-label="below slide"><div class="controls-arrow"></div></button>' );
+            var controls_scale = 0.7;
+            console.log("dom controls"+ dom.controls.style.height);
+            console.log("dom controls"+ dom.controls.style.width);
+            dom.controls.style.transform = 'scale('+ controls_scale +')'
 
 		// Slide number
 		dom.slideNumber = createSingletonNode( dom.wrapper, 'div', 'slide-number', '' );
@@ -752,10 +763,9 @@
                 // containers are used to provide a full width encloser
                 // that simplifies scaling
 		dom.slideFootContainer  = createSingletonNode( dom.wrapper, 'div', 'slide-foot-container', '' );
-		dom.slideFoot  = createSingletonNode(dom.slideFootContainer , 'div', 'slide-foot', '' );
+		dom.slideFoot  = createSingletonNode(dom.slideFootContainer, 'div', 'slide-foot', '' );
 		dom.slideHeadContainer  = createSingletonNode( dom.wrapper, 'div', 'slide-head-container', '' );
-		dom.slideHead  = createSingletonNode( dom.slideHeadContainer, 'div', 'slide-head', '' );
-		dom.slideHeadTxt  = createSingletonNode( dom.slideHead, 'div', 'slide-head-text', '' );
+		dom.slideHeadTxt  = createSingletonNode( dom.slideHeadContainer, 'div', 'slide-head-text', '' );
             
 		// Element containing notes that are visible to the audience
 		dom.speakerNotes = createSingletonNode( dom.wrapper, 'div', 'speaker-notes', null );
@@ -2245,17 +2255,20 @@
                                 var slidePadding =  config.height * config.margin 
 				dom.slides.style.width = size.width + 'px';
 				dom.slides.style.height = size.height + 'px';
-                                dom.slideHeadContainer.style.width = size.width + 'px';
-                                dom.slideHeadTxt.setAttribute('style', 
-                                                      'top:'+ (-size.height/2-slidePadding/3)+'px');
 
-				// Determine scale of content to fit within available space
+			    // Determine scale of content to fit within available space
 				scale = Math.min( size.presentationWidth / size.width, size.presentationHeight / size.height );
 
 				// Respect max/min scale settings
 				scale = Math.max( scale, config.minScale );
 				scale = Math.min( scale, config.maxScale );
-
+                            dom.slideHeadContainer.style.width = size.width + 'px';
+                            dom.slideHeadContainer.style.left = '50%';
+                            dom.slideHeadContainer.style.top =  '0%';
+                            dom.slideHeadContainer.style.right = 'auto';
+                            dom.slideHeadContainer.style.bottom = 'auto';
+                            dom.slideHeadContainer.style.transform =  'translate(-50%, -50%) scale('+ scale +')'
+                            dom.slideFoot.style.transform = ' scale('+ scale +')'
 				// Don't apply any scaling styles if scale is 1
 				if( scale === 1 ) {
 					dom.slides.style.zoom = '';
@@ -2286,12 +2299,11 @@
 						dom.slides.style.top = '50%';
 						dom.slides.style.bottom = 'auto';
 						dom.slides.style.right = 'auto';
-						transformSlides( { layout: 'translate(-50%, -50%) scale('+ scale +')' } );
-				                transformElement( dom.slideFootContainer, 'scale('+ scale +')' );
-				                transformElement( dom.slideHeadContainer, 'translate(-50%, -50%) scale('+ scale +') translate(50%, 50%)' );
-					}
+					    transformSlides( { layout: 'translate(-50%, -50%) scale('+ scale +')' } );
+                                        }
 				}
 
+                            
 				// Select all slides, vertical and horizontal
 				var slides = toArray( dom.wrapper.querySelectorAll( SLIDES_SELECTOR ) );
 
@@ -3027,8 +3039,8 @@
 
 		updateControls();
 		updateProgress();
-	        updateSlideNumber();
-                updateFootandHead();
+		updateSlideNumber();
+	        updateFootandHead();
 		updateSlidesVisibility();
 		updateBackground( true );
 		updateNotesVisibility();
@@ -3246,6 +3258,19 @@
 			slides[index].classList.add( 'present' );
 			slides[index].removeAttribute( 'hidden' );
 			slides[index].removeAttribute( 'aria-hidden' );
+                        var head_elements = slides[index].getElementsByClassName('slide-segment-title');
+                        if (head_elements.length == 0 
+                            && slides[index].parentNode.className == 'stack present') {
+                            console.log('parent:'+slides[index].parentNode.className)
+                            head_elements = slides[index].parentNode.getElementsByClassName('slide-segment-title');
+                        }
+                        if (head_elements.length) {
+                            config.slideHeadStr = head_elements[0].innerHTML
+                        }
+                        else {
+
+                            config.slideHeadStr = ''
+                        }
 
                         var head_elements = slides[index].getElementsByClassName('slide-segment-title');
                         if (head_elements.length == 0 
@@ -3553,6 +3578,32 @@
                     }
 		}
             }
+	}
+
+    
+	/**
+	 * Updates the foot and head strings
+	 */
+	function updateFootandHead() {
+
+		// Set slide foot str if set
+		if( config.slideFootStr && dom.slideFoot) {
+                    if (indexh > 0 || indexv > 0) {
+	                dom.slideFoot.innerHTML = config.slideFootStr;
+                    }
+                    else {
+	                dom.slideFoot.innerHTML = '';
+                    }
+		}
+		if( config.slideHeadStr != null && dom.slideHeadTxt) {
+                    if (config.slideHeadStr != '') {
+		        dom.slideHeadTxt.innerHTML = config.slideHeadStr +'<'+(getSlidePastCount() + 1) + '/' + getTotalSlides()+'>';
+                    }
+                    else {
+		        dom.slideHeadTxt.innerHTML ='<'+ (getSlidePastCount() + 1) + '/' + getTotalSlides()+'>';
+                    }
+		}
+
 	}
 
     
