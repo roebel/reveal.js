@@ -764,8 +764,7 @@
                 // that simplifies scaling
 		dom.slideFootContainer  = createSingletonNode( dom.wrapper, 'div', 'slide-foot-container', '' );
 		dom.slideFoot  = createSingletonNode(dom.slideFootContainer, 'div', 'slide-foot', '' );
-		dom.slideHeadContainer  = createSingletonNode( dom.wrapper, 'div', 'slide-head-container', '' );
-		dom.slideHeadTxt  = createSingletonNode( dom.slideHeadContainer, 'div', 'slide-head-text', '' );
+		dom.slideHeadTxt  = createSingletonNode( dom.slides, 'div', 'slide-head-text', '' );
             
 		// Element containing notes that are visible to the audience
 		dom.speakerNotes = createSingletonNode( dom.wrapper, 'div', 'speaker-notes', null );
@@ -2256,19 +2255,16 @@
 				dom.slides.style.width = size.width + 'px';
 				dom.slides.style.height = size.height + 'px';
 
-			    // Determine scale of content to fit within available space
+			        // Determine scale of content to fit within available space
 				scale = Math.min( size.presentationWidth / size.width, size.presentationHeight / size.height );
 
 				// Respect max/min scale settings
 				scale = Math.max( scale, config.minScale );
-				scale = Math.min( scale, config.maxScale );
-                            dom.slideHeadContainer.style.width = size.width + 'px';
-                            dom.slideHeadContainer.style.left = '50%';
-                            dom.slideHeadContainer.style.top =  '0%';
-                            dom.slideHeadContainer.style.right = 'auto';
-                            dom.slideHeadContainer.style.bottom = 'auto';
-                            dom.slideHeadContainer.style.transform =  'translate(-50%, -50%) scale('+ scale +')'
-                            dom.slideFoot.style.transform = ' scale('+ scale +')'
+			        scale = Math.min( scale, config.maxScale );
+
+                                dom.slideHeadTxt.style.right= slidePadding + "px";
+                                dom.slideHeadTxt.style.top="-0.5em";
+                                dom.slideFoot.style.transform = ' scale('+ scale +')'
 				// Don't apply any scaling styles if scale is 1
 				if( scale === 1 ) {
 					dom.slides.style.zoom = '';
