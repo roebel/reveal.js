@@ -242,7 +242,7 @@
                         slideHeadStr: null,  
                     
 			// Transition style
-			transition: 'slide', // none/fade/slide/convex/concave/zoom
+			transition: 'slide', // none/fade/slide/convex/concave/zoom/page/cube/newpage
 
 			// Transition speed
 			transitionSpeed: 'default', // default/fast/slow
@@ -2265,8 +2265,8 @@
 				scale = Math.max( scale, config.minScale );
 			        scale = Math.min( scale, config.maxScale );
 
-                                dom.slideHeadTxt.style.right= slidePadding + "px";
-                                dom.slideHeadTxt.style.top="-0.5em";
+                                dom.slideHeadTxt.style.right=  "0px";
+                                dom.slideHeadTxt.style.top="-1em";
                                 dom.slideFoot.style.transform = ' scale('+ scale +')'
 				// Don't apply any scaling styles if scale is 1
 				if( scale === 1 ) {
@@ -5277,7 +5277,9 @@
 		if( activeElementIsCE || activeElementIsInput || activeElementIsNotes || unusedModifier || hold_movement ) return;
 
 		// While paused only allow resume keyboard events; 'b', 'v', '.'
-		var resumeKeyCodes = [66,86,190,191];
+	        var resumeKeyCodes = [66,86,190,191];
+                // return from overview with space, enter, b, v
+	        var extraEndOverviewKeyCodes = [32,13,66,86];
 		var key;
 
 		// Custom key bindings for togglePause should be able to resume
@@ -5292,6 +5294,12 @@
 		if( isPaused() && resumeKeyCodes.indexOf( keyCode ) === -1 ) {
 			return false;
 		}
+
+                if( isOverview() && extraEndOverviewKeyCodes.indexOf( keyCode ) != -1 ) {
+                     toggleOverview();
+	             event.preventDefault && event.preventDefault();
+                    return;
+	        }
 
 		var triggered = false;
 
