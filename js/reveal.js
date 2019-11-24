@@ -293,8 +293,11 @@
 			hideCursorTime: 5000,
 
 			// Script dependencies to load
-			dependencies: []
+		    dependencies: [],
 
+                    // elements that when active prevent the use of the keyboard for moving pages
+                    // this allows keeping focus on the audio player and not switch pages when audio player still has focus 
+                    hold_movement_when_element_or_class_active :  []
 		},
 
 		// Flags if Reveal.initialize() has been called
@@ -5250,7 +5253,12 @@
 
 		onUserInput( event );
 
-		// Is there a focused element that could be using the keyboard?
+	    // Is there a focused element that could be using the keyboard?
+            //console.log('element:'+document.activeElement.tagName.toLowerCase());
+            //console.log('class:'+document.activeElement.className.toLowerCase());
+            //console.log('hold tags:'+config.hold_movement_when_element_or_class_active);
+            var hold_movement = (config.hold_movement_when_element_or_class_active.indexOf(document.activeElement.tagName.toLowerCase()) !== -1
+                                 ||config.hold_movement_when_element_or_class_active.indexOf(document.activeElement.className.toLowerCase()) != -1);
 		var activeElementIsCE = document.activeElement && document.activeElement.contentEditable !== 'inherit';
 		var activeElementIsInput = document.activeElement && document.activeElement.tagName && /input|textarea/i.test( document.activeElement.tagName );
 		var activeElementIsNotes = document.activeElement && document.activeElement.className && /speaker-notes/i.test( document.activeElement.className);
@@ -5266,7 +5274,7 @@
 
 		// Disregard the event if there's a focused element or a
 		// keyboard modifier key is present
-		if( activeElementIsCE || activeElementIsInput || activeElementIsNotes || unusedModifier ) return;
+		if( activeElementIsCE || activeElementIsInput || activeElementIsNotes || unusedModifier || hold_movement ) return;
 
 		// While paused only allow resume keyboard events; 'b', 'v', '.'
 		var resumeKeyCodes = [66,86,190,191];
