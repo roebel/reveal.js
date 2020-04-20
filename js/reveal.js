@@ -1343,6 +1343,10 @@
 		// Force linear transition based on browser capabilities
 		if( features.transforms3d === false ) config.transition = 'linear';
 
+                // AXEL: Force no transition when printing, many transitions
+                // do not work well in that case
+	        if( isPrintingPDF() ) config.transition = 'linear';
+            
 		dom.wrapper.classList.add( config.transition );
 
 		dom.wrapper.setAttribute( 'data-transition-speed', config.transitionSpeed );
