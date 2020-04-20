@@ -412,6 +412,9 @@ column-count:2;
 }
 
 
+.reveal .reference_color {
+    color: #8b743d;	/*#605020; */
+}
 
 .reveal .reference {
     font-size: 100%; 
