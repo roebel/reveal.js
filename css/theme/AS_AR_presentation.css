@@ -126,6 +126,36 @@ column-count:2;
     flex-direction:column;
     justify-content:space-around;
 }
+
+/* all ul in a flex_column will them selves be flex_columns */
+.reveal  div.flex_column ul,ol
+{
+    display:flex;
+    flex-direction:column;
+    flex-grow: auto;
+}
+
+.reveal  div.flex_column li ul,ol
+{
+    display:flex;
+    flex-direction:column;
+    flex-grow: auto;
+}
+
+.reveal  div.flex_column li
+{
+    flex: auto;
+}
+.reveal  div.flex_column ul,ol li
+{
+    flex: auto;
+}
+.reveal  div.flex_column ul,ol li ul,ol li
+{
+    flex: auto;
+}
+
+
 .reveal  div .flex_row
 {
     display:flex;
