@@ -42,6 +42,16 @@ whitebox {
   background: rgba(79, 64, 28, 0.99);
   text-shadow: none; }
 
+.LEFT    { text-align:left; }
+.CENTER  { text-align:center; }
+.CENTER > * { margin:auto; }
+.RIGHT   { text-align:right; }
+.TOP     { vertical-align:top; }
+.MIDDLE  { vertical-align:middle; }
+.BOTTOM  { vertical-align:bottom; }
+
+
+
 /*********************************************
  * HEADERS
  *********************************************/
@@ -87,6 +97,16 @@ whitebox {
   margin-bottom: 0.5em;
 }
 
+.reveal .titlepage
+{
+    display:flex;
+    flex-direction:column;
+    width:100%;
+    height:500px;
+    justify-content:space-evenly;
+    align-items:center;
+}
+
 .reveal .newspaper
 {
 -webkit-column-count:2; /* Safari and Chrome */
@@ -124,36 +144,33 @@ column-count:2;
 {
     display:flex;
     flex-direction:column;
-    justify-content:space-around;
+    justify-content:space-evenly;
+    --li-margin: 0.2em;
 }
 
 /* all ul in a flex_column will them selves be flex_columns */
-.reveal  div.flex_column ul,ol
+.reveal  div.flex_column  ul,ol
 {
     display:flex;
     flex-direction:column;
-    flex-grow: auto;
+    flex: 0 1 auto;
+    justify-content:inherit;
+    margin-left:0em;
 }
 
-.reveal  div.flex_column li ul,ol
+.reveal  div.flex_column  li
 {
-    display:flex;
-    flex-direction:column;
-    flex-grow: auto;
+    flex: auto;
+    flex: 0 1 auto;
+    justify-content:inherit;
+    margin-bottom: calc(var(--li-margin, 1em));
 }
 
-.reveal  div.flex_column li
+.reveal  div  li
 {
-    flex: auto;
+    margin-bottom: calc(var(--li-margin, 1em));
 }
-.reveal  div.flex_column ul,ol li
-{
-    flex: auto;
-}
-.reveal  div.flex_column ul,ol li ul,ol li
-{
-    flex: auto;
-}
+
 
 
 .reveal  div .flex_row
