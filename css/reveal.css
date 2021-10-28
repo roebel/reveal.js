@@ -190,8 +190,6 @@ body {
 
 .reveal ol li ,
 .reveal ul li {
-	display: inline-block;
-
 	text-align: left;
 	margin: 0 0 0 1em;
 }
