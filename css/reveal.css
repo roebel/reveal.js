@@ -1013,7 +1013,7 @@ body {
   min-height: 700px;
   max-height: 700px;
   box-sizing: border-box;
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.04);
   -webkit-transform-style: preserve-3d;
           transform-style: preserve-3d; }
 
