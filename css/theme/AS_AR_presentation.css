@@ -76,19 +76,19 @@ whitebox {
 .reveal h2 {
   font-size: 1.6em;
   text-align: left;
-  color: #2f76d1;
+  color: #0f37bb;
   text-transform: none;
   text-shadow: none;
 }
 .reveal h3 {
   font-size: 1.4em;
   text-align: left;
-  color: #2f76d1;
+  color: #1b0ea8;
   text-transform: none;
   text-shadow: none;
 }
 .reveal h4 {
-  color: #2060a6;
+  color: #1e5693;
   font-size: 1.2em;
 }
 
@@ -469,7 +469,7 @@ column-count:2;
 }
 
 .reveal .transparent {
-    opacity: 0.5;
+    opacity: 0;
 }
 
 .textwrap_right {
@@ -514,7 +514,7 @@ column-count:2;
     left: 15px;
     bottom: 15px;
     opacity: 0.5;
-    z-index: 31;
+    z-index: 0;
     font-size: 12px;
 }              
 
