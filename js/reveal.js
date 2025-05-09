@@ -89,10 +89,10 @@
 			showSlideNumber: 'all',
 
                         // foot string
-                        slideFootStr: null,  
+                        slideFootStr: null,
 
                         // head string
-                        slideHeadStr: null,  
+                        slideHeadStr: null,
 
 
                         // Use 1 based indexing for # links to match slide number (default is zero
@@ -236,11 +236,11 @@
 			focusBodyOnPageVisibilityChange: true,
 
                         // foot string
-                        slideFootStr: null,  
+                        slideFootStr: null,
 
                         // head string
-                        slideHeadStr: null,  
-                    
+                        slideHeadStr: null,
+
 			// Transition style
 			transition: 'slide', // none/fade/slide/convex/concave/zoom/page/cube/newpage
 
@@ -296,7 +296,7 @@
 		    dependencies: [],
 
                     // elements that when active prevent the use of the keyboard for moving pages
-                    // this allows keeping focus on the audio player and not switch pages when audio player still has focus 
+                    // this allows keeping focus on the audio player and not switch pages when audio player still has focus
                     hold_movement_when_element_or_class_active :  []
 		},
 
@@ -320,7 +320,7 @@
 
                 // holds slide foot string
                 foot_string,
-            
+
 		// The previous and current slide HTML elements
 		previousSlide,
 		currentSlide,
@@ -725,7 +725,7 @@
 
 		// Prevent transitions while we're loading
 		dom.slides.classList.add( 'no-transition' );
-                num_slides = dom.slides.length; 
+                num_slides = dom.slides.length;
 
 		if( isMobileDevice ) {
 			dom.wrapper.classList.add( 'no-hover' );
@@ -768,7 +768,7 @@
 		dom.slideFootContainer  = createSingletonNode( dom.wrapper, 'div', 'slide-foot-container', '' );
 		dom.slideFoot  = createSingletonNode(dom.slideFootContainer, 'div', 'slide-foot', '' );
 		dom.slideHeadTxt  = createSingletonNode( dom.slides, 'div', 'slide-head-text', '' );
-            
+
 		// Element containing notes that are visible to the audience
 		dom.speakerNotes = createSingletonNode( dom.wrapper, 'div', 'speaker-notes', null );
 		dom.speakerNotes.setAttribute( 'data-prevent-swipe', '' );
@@ -861,12 +861,19 @@
 		var slideSize = getComputedSlideSize( window.innerWidth, window.innerHeight );
 
 		// Dimensions of the PDF pages
-		var pageWidth = Math.floor( slideSize.width * ( 1 + config.margin ) ),
-			pageHeight = Math.floor( slideSize.height * ( 1 + config.margin ) );
+		var pageWidth = Math.floor(slideSize.width * (1 + config.margin));
+		var pageHeight = Math.floor(slideSize.height * (1 + config.margin));
 
 		// Dimensions of slides within the pages
-		var slideWidth = slideSize.width,
-			slideHeight = slideSize.height;
+		var slideWidth = slideSize.width;
+		var slideHeight = slideSize.height;
+
+        var pageWidth = slideSize.width;
+	    var pageHeight = slideSize.height;
+
+		// Dimensions of slides within the pages
+		var slideWidth = Math.floor(slideSize.width * (1 - config.margin));
+		var slideHeight = Math.floor(slideSize.height * (1 - config.margin));
 
 		// Let the browser know what page size we want to print
 		injectStyleSheet( '@page{size:'+ pageWidth +'px '+ pageHeight +'px; margin: 0px;}' );
@@ -903,7 +910,7 @@
 				// Center the slide inside of the page, giving the slide some margin
 				var left = ( pageWidth - slideWidth ) / 2,
 					top = ( pageHeight - slideHeight ) / 2;
-
+                console.log('pageWidth:'+pageWidth+" slideWidth:"+slideWidth );
 				var contentHeight = slide.scrollHeight;
 				var numberOfPages = Math.max( Math.ceil( contentHeight / pageHeight ), 1 );
 
@@ -925,6 +932,7 @@
 
 				// Position the slide inside of the page
 				slide.style.left = left + 'px';
+				slide.style.left = '0px';
 				slide.style.top = top + 'px';
 				slide.style.width = slideWidth + 'px';
 
@@ -1346,7 +1354,7 @@
                 // AXEL: Force no transition when printing, many transitions
                 // do not work well in that case
 	        if( isPrintingPDF() ) config.transition = 'linear';
-            
+
 		dom.wrapper.classList.add( config.transition );
 
 		dom.wrapper.setAttribute( 'data-transition-speed', config.transitionSpeed );
@@ -2258,7 +2266,7 @@
 
 				// Layout the contents of the slides
 				layoutSlideContents( config.width, config.height );
-                                var slidePadding =  config.height * config.margin 
+                                var slidePadding =  config.height * config.margin
 				dom.slides.style.width = size.width + 'px';
 				dom.slides.style.height = size.height + 'px';
 
@@ -2306,7 +2314,7 @@
                                         }
 				}
 
-                            
+
 				// Select all slides, vertical and horizontal
 				var slides = toArray( dom.wrapper.querySelectorAll( SLIDES_SELECTOR ) );
 
@@ -3262,7 +3270,7 @@
 			slides[index].removeAttribute( 'hidden' );
 			slides[index].removeAttribute( 'aria-hidden' );
                         var head_elements = slides[index].getElementsByClassName('slide-segment-title');
-                        if (head_elements.length == 0 
+                        if (head_elements.length == 0
                             && slides[index].parentNode.className == 'stack present') {
                             console.log('parent:'+slides[index].parentNode.className)
                             head_elements = slides[index].parentNode.getElementsByClassName('slide-segment-title');
@@ -3276,7 +3284,7 @@
                         }
 
                         var head_elements = slides[index].getElementsByClassName('slide-segment-title');
-                        if (head_elements.length == 0 
+                        if (head_elements.length == 0
                             && slides[index].parentNode.className == 'stack present') {
                             //console.log('parent:'+slides[index].parentNode.className)
                             head_elements = slides[index].parentNode.getElementsByClassName('slide-segment-title');
@@ -3539,7 +3547,7 @@
 	function updateFootandHead() {
 
 	    if( !isPrintingPDF() ) {
-            
+
 		// Set slide foot str if set
 		if( config.slideFootStr && dom.slideFoot) {
                     if (indexh > 0 || indexv > 0) {
@@ -3573,7 +3581,7 @@
                         console.log("ppos "+ ccs[0].parentNode.className+":"+posp.left+" offset:"+offp.left)
                         console.log("pppos "+ ccs[0].parentNode.parentNode.className+":"+pospp.left+" offset:"+offpp.left)
                         dom.slideHead.style.left = pos.left+'px';
-                        
+
                     }
                     else {
                         console.log('could not determine head position')
@@ -3583,7 +3591,7 @@
             }
 	}
 
-    
+
 	/**
 	 * Updates the foot and head strings
 	 */
@@ -3609,7 +3617,7 @@
 
 	}
 
-    
+
 	/**
 	 * Updates the state of all control/navigation arrows.
 	 */
